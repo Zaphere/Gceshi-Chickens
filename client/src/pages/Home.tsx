@@ -16,8 +16,8 @@ export default function Home() {
         <section className="py-12 bg-primary">
           <div className="container px-4 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <div>
-              <h2 className="text-2xl md:text-3xl font-serif font-bold text-secondary">Ready to place an order?</h2>
-              <p className="text-secondary/80 font-medium mt-1">We offer bulk discounts for orders over 20 birds.</p>
+              <h2 className="text-2xl md:text-3xl font-serif font-bold text-secondary">Have questions or need more info?</h2>
+              <p className="text-secondary/80 font-medium mt-1">Chat with us about bulk orders, specific requirements, or general inquiries.</p>
             </div>
             <a 
               href="/contact" 
