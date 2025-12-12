@@ -36,10 +36,12 @@ export function Navbar() {
                 {link.label}
             </Link>
           ))}
-          <Button variant="default" size="sm" className="bg-secondary hover:bg-secondary/90 text-white gap-2">
-            <Phone className="h-4 w-4" />
-            <span>Order Now</span>
-          </Button>
+          <Link href="/order">
+            <Button variant="default" size="sm" className="bg-secondary hover:bg-secondary/90 text-white gap-2">
+              <Phone className="h-4 w-4" />
+              <span>Order Now</span>
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Menu Toggle */}
