@@ -19,7 +19,7 @@ export function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hello! I'm Jessie AI. How can I help you with Gceshi Chickens today?",
+      text: "Hello! I'm Gceshi. How can I help you with Gceshi Chickens today?",
       sender: "bot",
       timestamp: new Date(),
     },
@@ -80,7 +80,7 @@ export function ChatWidget() {
                     <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-secondary"></span>
                   </div>
                   <div>
-                    <h3 className="font-bold text-white text-lg leading-none">Jessie AI</h3>
+                    <h3 className="font-bold text-white text-lg leading-none">Gceshi</h3>
                     <span className="text-xs text-primary/80">Online Support</span>
                   </div>
                 </div>
