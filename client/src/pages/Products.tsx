@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -26,6 +27,7 @@ const products = [
 ];
 
 export default function Products() {
+  const [, setLocation] = useLocation();
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
@@ -63,7 +65,12 @@ export default function Products() {
                     <p className="text-muted-foreground">{product.description}</p>
                   </CardContent>
                   <CardFooter className="bg-muted/30 pt-6">
-                    <Button className="w-full bg-secondary text-white hover:bg-secondary/90">Order Now</Button>
+                    <Button
+                      className="w-full bg-secondary text-white hover:bg-secondary/90"
+                      onClick={() => setLocation("/order")}
+                    >
+                      Order Now
+                    </Button>
                   </CardFooter>
                 </Card>
               </motion.div>
@@ -75,7 +82,11 @@ export default function Products() {
             <p className="text-muted-foreground mb-6">
               Planning a large event or stocking your shop? We offer special bulk discounts for orders of 20 or more birds.
             </p>
-            <Button size="lg" className="bg-primary text-secondary font-bold hover:bg-primary/90">
+            <Button
+              size="lg"
+              className="bg-primary text-secondary font-bold hover:bg-primary/90"
+              onClick={() => setLocation("/contact")}
+            >
               Contact for Bulk Pricing
             </Button>
           </div>
