@@ -33,10 +33,7 @@
 }
 
 :root {
-  /* Gceshi Chickens Palette */
-  /* Gold: #D4AF37 -> HSL: 46 65% 52% */
-  /* Forest Green: #0B3D2E -> HSL: 162 70% 14% */
-  
+  /* Gceshi Chickens Palette - Light Mode */
   --background: 40 20% 98%; /* Warm white */
   --foreground: 162 70% 10%; /* Very dark green/black */
   
@@ -47,7 +44,7 @@
   --popover-foreground: 162 70% 14%;
   
   --primary: 46 65% 52%; /* Gold */
-  --primary-foreground: 162 70% 14%; /* Forest Green on Gold */
+  --primary-foreground: 162 70% 10%; /* Dark Green on Gold */
   
   --secondary: 162 70% 14%; /* Forest Green */
   --secondary-foreground: 46 65% 52%; /* Gold on Green */
@@ -61,39 +58,39 @@
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
   
-  --border: 162 30% 90%;
-  --input: 162 30% 90%;
+  --border: 162 30% 85%;
+  --input: 162 30% 85%;
   --ring: 46 65% 52%;
   
   --radius: 0.5rem;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 .dark {
-  /* Keeping it light/warm generally as per request, but defining dark just in case */
-  --background: 162 70% 10%;
-  --foreground: 40 20% 98%;
+  /* Gceshi Chickens Palette - Dark Mode */
+  /* Background: Deep Forest Green */
+  --background: 162 70% 7%; 
+  --foreground: 40 20% 95%; /* Off-white text */
   
-  --card: 162 70% 12%;
-  --card-foreground: 40 20% 98%;
+  /* Card: Slightly lighter Forest Green */
+  --card: 162 60% 10%;
+  --card-foreground: 40 20% 95%;
   
-  --popover: 162 70% 12%;
-  --popover-foreground: 40 20% 98%;
+  --popover: 162 60% 10%;
+  --popover-foreground: 40 20% 95%;
   
+  /* Primary: Gold (kept same for brand identity) */
   --primary: 46 65% 52%;
-  --primary-foreground: 162 70% 14%;
+  --primary-foreground: 162 70% 10%;
   
-  --secondary: 162 30% 20%;
-  --secondary-foreground: 40 20% 98%;
+  /* Secondary: Lighter Green or Gold-tinted white for contrast */
+  --secondary: 162 40% 20%;
+  --secondary-foreground: 46 65% 60%;
   
-  --muted: 162 30% 20%;
+  --muted: 162 40% 15%;
   --muted-foreground: 162 20% 70%;
   
-  --accent: 162 30% 20%;
-  --accent-foreground: 40 20% 98%;
+  --accent: 162 40% 20%;
+  --accent-foreground: 46 65% 60%;
   
   --destructive: 0 62% 30%;
   --destructive-foreground: 0 0% 98%;
@@ -103,12 +100,16 @@ html {
   --ring: 46 65% 52%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background text-foreground transition-colors duration-300;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;

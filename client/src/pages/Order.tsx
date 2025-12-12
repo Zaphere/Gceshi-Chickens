@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { CheckCircle2, Minus, Plus, ShoppingCart, Truck, Store } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
@@ -66,13 +66,20 @@ export default function Order() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Mock API call
-    console.log(values);
+    console.log("Order Data:", values);
     const newOrderId = `ORD-${Math.floor(Math.random() * 10000)}`;
     setOrderId(newOrderId);
     setOrderComplete(true);
+    
+    // Simulate email sending
+    console.log(`Sending email to owner with order ${newOrderId}...`);
+    
+    // In a real app, this would be an API call. 
+    // Here we just show a toast that confirms "sending".
+    
     toast({
       title: "Order Placed Successfully!",
-      description: `Your order #${newOrderId} has been received.`,
+      description: `Order #${newOrderId} has been sent to our team.`,
     });
   }
 
@@ -82,18 +89,22 @@ export default function Order() {
       : ["name", "phone", "address"] as const;
       
     const isValid = await form.trigger(fields);
-    if (isValid) setStep(step + 1);
+    if (isValid) {
+      setStep(step + 1);
+      // Scroll to top of form on mobile
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+    }
   };
 
   const prevStep = () => setStep(step - 1);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col transition-colors duration-300">
       <Navbar />
-      <main className="flex-grow py-12 px-4 bg-muted/20">
-        <div className="container max-w-4xl mx-auto">
+      <main className="flex-grow py-8 md:py-12 px-4 bg-muted/20">
+        <div className="container max-w-5xl mx-auto">
           <div className="mb-8 text-center">
-            <h1 className="text-4xl font-serif font-bold text-secondary mb-2">Place Your Order</h1>
+            <h1 className="text-3xl md:text-4xl font-serif font-bold text-secondary dark:text-primary mb-2">Place Your Order</h1>
             <p className="text-muted-foreground">Fresh from our farm to your table</p>
           </div>
 
@@ -105,15 +116,16 @@ export default function Order() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <div className="grid md:grid-cols-[2fr,1fr] gap-8">
-                  <Card className="border-none shadow-lg">
+                <div className="flex flex-col lg:flex-row gap-8">
+                  {/* Order Form */}
+                  <Card className="border-none shadow-lg flex-1 order-2 lg:order-1 bg-card">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
-                        <span className={`flex items-center justify-center w-8 h-8 rounded-full text-sm border ${step === 1 ? 'bg-primary text-secondary border-primary' : 'bg-muted text-muted-foreground'}`}>1</span>
-                        <span className={step === 1 ? "text-secondary" : "text-muted-foreground"}>Order Details</span>
+                        <span className={`flex items-center justify-center w-8 h-8 rounded-full text-sm border font-bold transition-colors ${step === 1 ? 'bg-primary text-secondary border-primary' : 'bg-muted text-muted-foreground'}`}>1</span>
+                        <span className={step === 1 ? "text-card-foreground font-bold" : "text-muted-foreground"}>Order Details</span>
                         <Separator className="w-8 mx-2" />
-                        <span className={`flex items-center justify-center w-8 h-8 rounded-full text-sm border ${step === 2 ? 'bg-primary text-secondary border-primary' : 'bg-muted text-muted-foreground'}`}>2</span>
-                        <span className={step === 2 ? "text-secondary" : "text-muted-foreground"}>Customer Info</span>
+                        <span className={`flex items-center justify-center w-8 h-8 rounded-full text-sm border font-bold transition-colors ${step === 2 ? 'bg-primary text-secondary border-primary' : 'bg-muted text-muted-foreground'}`}>2</span>
+                        <span className={step === 2 ? "text-card-foreground font-bold" : "text-muted-foreground"}>Info</span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -130,7 +142,7 @@ export default function Order() {
                                 name="productType"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel className="text-lg font-semibold text-secondary">Select Product</FormLabel>
+                                    <FormLabel className="text-lg font-semibold text-card-foreground">Select Product</FormLabel>
                                     <FormControl>
                                       <RadioGroup
                                         onValueChange={field.onChange}
@@ -141,11 +153,11 @@ export default function Order() {
                                           <FormControl>
                                             <RadioGroupItem value="cleaned" className="peer sr-only" />
                                           </FormControl>
-                                          <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all">
+                                          <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-card p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all">
                                             <div className="w-full aspect-video rounded-lg overflow-hidden mb-3">
                                               <img src={product1} alt="Cleaned" className="w-full h-full object-cover" />
                                             </div>
-                                            <span className="text-xl font-bold text-secondary">Cleaned Broiler</span>
+                                            <span className="text-xl font-bold text-card-foreground">Cleaned Broiler</span>
                                             <span className="text-primary font-bold">E{PRICE_PER_UNIT}.00</span>
                                             <span className="text-xs text-muted-foreground mt-1">Ready to cook</span>
                                           </FormLabel>
@@ -154,11 +166,11 @@ export default function Order() {
                                           <FormControl>
                                             <RadioGroupItem value="live" className="peer sr-only" />
                                           </FormControl>
-                                          <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all">
+                                          <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-card p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all">
                                             <div className="w-full aspect-video rounded-lg overflow-hidden mb-3">
                                               <img src={product2} alt="Live" className="w-full h-full object-cover" />
                                             </div>
-                                            <span className="text-xl font-bold text-secondary">Live Broiler</span>
+                                            <span className="text-xl font-bold text-card-foreground">Live Broiler</span>
                                             <span className="text-primary font-bold">E{PRICE_PER_UNIT}.00</span>
                                             <span className="text-xs text-muted-foreground mt-1">Fresh from farm</span>
                                           </FormLabel>
@@ -175,7 +187,7 @@ export default function Order() {
                                 name="quantity"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel className="text-lg font-semibold text-secondary">Quantity</FormLabel>
+                                    <FormLabel className="text-lg font-semibold text-card-foreground">Quantity</FormLabel>
                                     <div className="flex items-center gap-4">
                                       <Button
                                         type="button"
@@ -187,7 +199,7 @@ export default function Order() {
                                         <Minus className="h-4 w-4" />
                                       </Button>
                                       <FormControl>
-                                        <div className="w-20 text-center text-2xl font-bold text-secondary">
+                                        <div className="w-20 text-center text-2xl font-bold text-card-foreground">
                                           {field.value}
                                         </div>
                                       </FormControl>
@@ -214,7 +226,7 @@ export default function Order() {
                                 name="deliveryMethod"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel className="text-lg font-semibold text-secondary">Delivery Method</FormLabel>
+                                    <FormLabel className="text-lg font-semibold text-card-foreground">Delivery Method</FormLabel>
                                     <FormControl>
                                       <RadioGroup
                                         onValueChange={field.onChange}
@@ -230,7 +242,7 @@ export default function Order() {
                                               <Store className="h-5 w-5" />
                                             </div>
                                             <div className="flex flex-col">
-                                              <span className="font-semibold text-secondary">Farm Pickup</span>
+                                              <span className="font-semibold text-card-foreground">Farm Pickup</span>
                                               <span className="text-sm text-muted-foreground">Makholokholo, Mbabane</span>
                                             </div>
                                             <span className="ml-auto font-semibold text-green-600">Free</span>
@@ -245,10 +257,10 @@ export default function Order() {
                                               <Truck className="h-5 w-5" />
                                             </div>
                                             <div className="flex flex-col">
-                                              <span className="font-semibold text-secondary">Local Delivery</span>
+                                              <span className="font-semibold text-card-foreground">Local Delivery</span>
                                               <span className="text-sm text-muted-foreground">Within Mbabane area</span>
                                             </div>
-                                            <span className="ml-auto font-semibold text-secondary">E{DELIVERY_FEE}.00</span>
+                                            <span className="ml-auto font-semibold text-card-foreground">E{DELIVERY_FEE}.00</span>
                                           </FormLabel>
                                         </FormItem>
                                       </RadioGroup>
@@ -272,9 +284,9 @@ export default function Order() {
                                   name="name"
                                   render={({ field }) => (
                                     <FormItem>
-                                      <FormLabel>Full Name</FormLabel>
+                                      <FormLabel className="text-card-foreground">Full Name</FormLabel>
                                       <FormControl>
-                                        <Input placeholder="John Doe" {...field} className="h-11" />
+                                        <Input placeholder="John Doe" {...field} className="h-11 bg-background" />
                                       </FormControl>
                                       <FormMessage />
                                     </FormItem>
@@ -285,9 +297,9 @@ export default function Order() {
                                   name="phone"
                                   render={({ field }) => (
                                     <FormItem>
-                                      <FormLabel>Phone Number</FormLabel>
+                                      <FormLabel className="text-card-foreground">Phone Number</FormLabel>
                                       <FormControl>
-                                        <Input placeholder="+268..." {...field} className="h-11" />
+                                        <Input placeholder="+268..." {...field} className="h-11 bg-background" />
                                       </FormControl>
                                       <FormMessage />
                                     </FormItem>
@@ -301,9 +313,9 @@ export default function Order() {
                                   name="address"
                                   render={({ field }) => (
                                     <FormItem>
-                                      <FormLabel>Delivery Address</FormLabel>
+                                      <FormLabel className="text-card-foreground">Delivery Address</FormLabel>
                                       <FormControl>
-                                        <Input placeholder="Street name, Area, House number..." {...field} className="h-11" />
+                                        <Input placeholder="Street name, Area, House number..." {...field} className="h-11 bg-background" />
                                       </FormControl>
                                       <FormMessage />
                                     </FormItem>
@@ -312,14 +324,14 @@ export default function Order() {
                               )}
 
                               <div className="bg-primary/5 p-6 rounded-lg border border-primary/20 mt-6">
-                                <h3 className="font-serif font-bold text-secondary mb-4">Payment Method</h3>
+                                <h3 className="font-serif font-bold text-card-foreground mb-4">Payment Method</h3>
                                 <p className="text-sm text-muted-foreground mb-4">
                                   Payment is required upon delivery or pickup. We accept cash and e-wallet transfers.
                                 </p>
-                                <div className="flex gap-2 text-sm font-medium text-secondary">
-                                  <span className="bg-white px-3 py-1 rounded border">Cash</span>
-                                  <span className="bg-white px-3 py-1 rounded border">MoMo</span>
-                                  <span className="bg-white px-3 py-1 rounded border">e-Wallet</span>
+                                <div className="flex gap-2 text-sm font-medium text-card-foreground">
+                                  <span className="bg-background px-3 py-1 rounded border">Cash</span>
+                                  <span className="bg-background px-3 py-1 rounded border">MoMo</span>
+                                  <span className="bg-background px-3 py-1 rounded border">e-Wallet</span>
                                 </div>
                               </div>
                             </motion.div>
@@ -327,19 +339,19 @@ export default function Order() {
                         </form>
                       </Form>
                     </CardContent>
-                    <CardFooter className="flex justify-between border-t p-6">
+                    <CardFooter className="flex flex-col sm:flex-row justify-between border-t p-6 gap-4">
                       {step === 1 ? (
                         <div className="w-full flex justify-end">
-                          <Button onClick={nextStep} size="lg" className="w-full md:w-auto bg-secondary text-white hover:bg-secondary/90">
+                          <Button onClick={nextStep} size="lg" className="w-full md:w-auto bg-secondary text-white hover:bg-secondary/90 shadow-md">
                             Continue to Details
                           </Button>
                         </div>
                       ) : (
-                        <div className="w-full flex justify-between gap-4">
-                          <Button variant="outline" onClick={prevStep} size="lg">
+                        <div className="w-full flex flex-col sm:flex-row justify-between gap-4">
+                          <Button variant="outline" onClick={prevStep} size="lg" className="w-full sm:w-auto">
                             Back
                           </Button>
-                          <Button onClick={form.handleSubmit(onSubmit)} size="lg" className="flex-1 md:flex-none bg-primary text-secondary hover:bg-primary/90 font-bold">
+                          <Button onClick={form.handleSubmit(onSubmit)} size="lg" className="w-full sm:w-auto flex-1 bg-primary text-secondary hover:bg-primary/90 font-bold shadow-md">
                             Place Order
                           </Button>
                         </div>
@@ -348,7 +360,7 @@ export default function Order() {
                   </Card>
 
                   {/* Order Summary Sidebar */}
-                  <div className="space-y-6">
+                  <div className="lg:w-[350px] space-y-6 order-1 lg:order-2">
                     <Card className="border-none shadow-lg sticky top-24 bg-secondary text-white">
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
@@ -390,21 +402,21 @@ export default function Order() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="max-w-md mx-auto"
               >
-                <Card className="border-none shadow-xl text-center overflow-hidden">
+                <Card className="border-none shadow-xl text-center overflow-hidden bg-card">
                   <div className="h-2 bg-primary w-full" />
                   <CardContent className="pt-12 pb-10 px-8">
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
                       <CheckCircle2 className="w-10 h-10" />
                     </div>
-                    <h2 className="text-3xl font-serif font-bold text-secondary mb-2">Order Received!</h2>
+                    <h2 className="text-3xl font-serif font-bold text-card-foreground mb-2">Order Received!</h2>
                     <p className="text-muted-foreground mb-8">
-                      Thank you for your order. We will contact you shortly to confirm delivery details.
+                      Thank you for your order. We have sent the details to our team and will contact you shortly to confirm.
                     </p>
                     
-                    <div className="bg-muted/30 p-6 rounded-lg mb-8 text-left space-y-3">
+                    <div className="bg-muted/30 p-6 rounded-lg mb-8 text-left space-y-3 border border-border">
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Order ID:</span>
-                        <span className="font-mono font-bold text-secondary">{orderId}</span>
+                        <span className="font-mono font-bold text-card-foreground">{orderId}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Total Amount:</span>
@@ -412,12 +424,12 @@ export default function Order() {
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Status:</span>
-                        <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-xs font-medium">Pending Confirmation</span>
+                        <span className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-500 px-2 py-0.5 rounded text-xs font-medium">Pending Confirmation</span>
                       </div>
                     </div>
 
                     <div className="space-y-3">
-                      <Button className="w-full bg-secondary text-white hover:bg-secondary/90" onClick={() => window.location.reload()}>
+                      <Button className="w-full bg-secondary text-white hover:bg-secondary/90 shadow-md" onClick={() => window.location.reload()}>
                         Place Another Order
                       </Button>
                       <Button variant="outline" className="w-full" onClick={() => window.print()}>
