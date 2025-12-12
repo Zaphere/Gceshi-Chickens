@@ -6,6 +6,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Phone, MapPin, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { apiRequest } from "@/lib/queryClient";
 
 const container = {
   hidden: { opacity: 0 },
@@ -22,14 +36,60 @@ const item = {
   show: { opacity: 1, x: 0 }
 };
 
+const formSchema = z.object({
+  firstName: z.string().min(2, "First name must be at least 2 characters."),
+  lastName: z.string().min(2, "Last name must be at least 2 characters."),
+  phone: z.string().min(8, "Please enter a valid phone number."),
+  message: z.string().min(10, "Message must be at least 10 characters."),
+});
+
 export default function Contact() {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      phone: "",
+      message: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+    try {
+      const response = await apiRequest("POST", "/api/contact", values);
+
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
+
+      toast({
+        title: "Message Sent!",
+        description: "We've received your message and will get back to you shortly.",
+      });
+
+      form.reset();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background flex flex-col transition-colors duration-300">
       <Navbar />
       <main className="flex-grow">
         <div className="bg-secondary py-24 text-center text-white">
           <div className="container px-4">
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
@@ -37,7 +97,7 @@ export default function Contact() {
             >
               Contact Us
             </motion.h1>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -51,7 +111,7 @@ export default function Contact() {
         <div className="container px-4 py-24">
           <div className="grid lg:grid-cols-2 gap-16 max-w-6xl mx-auto">
             {/* Contact Info */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -64,7 +124,7 @@ export default function Contact() {
                 </p>
               </div>
 
-              <motion.div 
+              <motion.div
                 variants={container}
                 initial="hidden"
                 animate="show"
@@ -120,36 +180,78 @@ export default function Contact() {
             </motion.div>
 
             {/* Contact Form */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="bg-card p-6 md:p-10 rounded-2xl shadow-xl border border-border/50 sticky top-24"
             >
               <h3 className="text-2xl font-serif font-bold text-card-foreground mb-8">Send us a Message</h3>
-              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-card-foreground">First Name</label>
-                    <Input placeholder="John" className="h-12 bg-background border-input focus:ring-primary transition-colors" />
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-card-foreground">First Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="John" {...field} className="h-12 bg-background border-input focus:ring-primary transition-colors" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-card-foreground">Last Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Doe" {...field} className="h-12 bg-background border-input focus:ring-primary transition-colors" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-card-foreground">Last Name</label>
-                    <Input placeholder="Doe" className="h-12 bg-background border-input focus:ring-primary transition-colors" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-card-foreground">Phone Number</label>
-                  <Input placeholder="+268..." className="h-12 bg-background border-input focus:ring-primary transition-colors" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-card-foreground">Message</label>
-                  <Textarea placeholder="I would like to order..." className="min-h-[150px] bg-background border-input focus:ring-primary transition-colors resize-none" />
-                </div>
-                <Button className="w-full bg-secondary text-white hover:bg-secondary/90 h-14 text-lg font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                  Send Message
-                </Button>
-              </form>
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-card-foreground">Phone Number</FormLabel>
+                        <FormControl>
+                          <Input placeholder="+268..." {...field} className="h-12 bg-background border-input focus:ring-primary transition-colors" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-card-foreground">Message</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="I would like to order..." {...field} className="min-h-[150px] bg-background border-input focus:ring-primary transition-colors resize-none" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-secondary text-white hover:bg-secondary/90 h-14 text-lg font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                  </Button>
+                </form>
+              </Form>
             </motion.div>
           </div>
         </div>
