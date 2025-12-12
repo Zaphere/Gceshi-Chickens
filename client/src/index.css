@@ -68,6 +68,10 @@
   --radius: 0.5rem;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .dark {
   /* Keeping it light/warm generally as per request, but defining dark just in case */
   --background: 162 70% 10%;
