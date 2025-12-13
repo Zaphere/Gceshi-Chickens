@@ -24,7 +24,7 @@ export function Hero() {
         <img
           src={heroImage}
           alt="Poultry Farm"
-          className="w-full h-full object-cover scale-110"
+          className="w-full h-full object-cover md:object-bottom"
         />
         <div className="absolute inset-0 bg-black/40 mix-blend-multiply" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
