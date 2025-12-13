@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import heroImage from "@assets/generated_images/black_farmer_inspecting_broiler_chickens_in_a_clean_coop.png";
+import heroImage from "@assets/homepage_hero.jpg";
 import { useRef } from "react";
 
 export function Hero() {
@@ -17,13 +17,13 @@ export function Hero() {
   return (
     <section ref={ref} className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
-      <motion.div 
+      <motion.div
         style={{ y, opacity }}
         className="absolute inset-0 z-0"
       >
-        <img 
-          src={heroImage} 
-          alt="Poultry Farm" 
+        <img
+          src={heroImage}
+          alt="Poultry Farm"
           className="w-full h-full object-cover scale-110"
         />
         <div className="absolute inset-0 bg-black/40 mix-blend-multiply" />
@@ -37,33 +37,33 @@ export function Hero() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="max-w-4xl mx-auto space-y-8"
         >
-          <motion.span 
+          <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
             className="inline-block py-2 px-4 rounded-full bg-primary/20 text-primary border border-primary/30 text-sm font-bold uppercase tracking-widest backdrop-blur-md"
           >
-            Premium Poultry Farm
+            Premium Poultry Farm • Est. 2021
           </motion.span>
-          
+
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white leading-[1.1] tracking-tight drop-shadow-lg">
             Where Poultry <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-400 to-primary bg-[length:200%_auto] animate-gradient">
               Perfection Begins
             </span>
           </h1>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
             className="text-lg md:text-2xl text-gray-200 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-md"
           >
             Providing healthy, well-grown broiler chickens raised with care in Makholokholo, Mbabane.
-            <span className="block mt-2 font-medium text-white">Fresh • Affordable • Trusted</span>
+            <span className="block mt-2 font-medium text-white">Fresh • Affordable • Trusted • Delivery for Bulk Buyers</span>
           </motion.p>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.5 }}
@@ -83,7 +83,7 @@ export function Hero() {
         </motion.div>
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
